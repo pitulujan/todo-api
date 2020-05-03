@@ -1,0 +1,7 @@
+jwt-key
+jwt-key.pub
+test_errores.py
+test_validator.py
+./api/__pycache__
+./api/errors/__pycache__
+venv/
