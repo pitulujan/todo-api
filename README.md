@@ -6,7 +6,7 @@ I decided to use JSON Web Tokens with Public Key Signatures, so if in the future
 
 ### Run it 
 
-In order to run the application, first you should create a private-public key pair ``ssh-keygen -t rsa -b 4096 `` and paste it as shown belown
+In order to run the application, first you should create a private-public key pair ``ssh-keygen -t rsa -b 4096 `` and paste it as shown below
 
 ```
 .
