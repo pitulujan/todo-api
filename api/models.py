@@ -25,8 +25,15 @@ class User(db.Model):
 
 
 class Tasks(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    task_id = db.Column(db.Integer, unique=True)
+    task_id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(128))
     title = db.Column(db.String(128))
     done = db.Column(db.Boolean)
+
+    def get_rep(self):
+        return {
+            "title": self.title,
+            "description": self.description,
+            "id": self.task_id,
+            "done": self.done,
+        }

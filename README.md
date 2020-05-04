@@ -25,6 +25,8 @@ In order to run the application, first you should create a private-public key pa
 │   ├── jwt-key                # User should create it and paste it here 
 |   ├── jwt-key.pub            # User should create it and paste it here
 |   ├── requirements.txt
+|   ├── seed_db.py             # Simple script to seed the db
+|   ├── app.db                 # Simple db with data from seed_db.py
 |   └── run.py
 ```
 

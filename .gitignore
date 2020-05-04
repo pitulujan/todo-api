@@ -7,3 +7,4 @@ test_validator.py
 venv/
 .vscode
 __pycache__
+migrations

@@ -3,7 +3,7 @@ from flask import Flask, jsonify, abort, make_response, g, request
 from typing import Any
 import jwt
 from time import time
-from api import app, auth, tasks, private_key, public_key
+from api import app, auth, tasks, private_key, public_key, db
 from api.models import User, Tasks
 from api.errors.api_errors import (
     NotAuthorized,
@@ -31,7 +31,6 @@ def verify_password(username_or_token, password):
     except:
         abort(401)
     if auth_type.lower() == "basic":
-
 
         user = User.query.filter_by(username=username_or_token).first()
         if user is None or not user.check_password(password):
@@ -79,7 +78,7 @@ def get_tasks():
     tasks = []
 
     for task in query_tasks:
-        tasks.append({"title" : task.title,"description": task.description, "id" : task.task_id , "done" : task.done})
+        tasks.append(task.get_rep())
 
     return jsonify({"tasks": tasks})
 
@@ -87,11 +86,11 @@ def get_tasks():
 @app.route("/todo/api/v1.0/tasks/<int:task_id>", methods=["GET"])
 @auth.login_required
 def get_task(task_id):
-    query_task = Tasks.query.filter_by(task_id = task_id).first()
+    query_task = Tasks.query.filter_by(task_id=task_id).first()
     if query_task is None:
         raise IdNotFoundException("Id not found")
-    task = {"title" : query_task.title,"description": query_task.description, "id" : query_task.task_id , "done" : query_task.done}
-    return jsonify({"tasks": task})
+
+    return jsonify({"tasks": query_task.get_rep()})
 
 
 @app.route("/todo/api/v1.0/tasks", methods=["POST"])
@@ -104,14 +103,15 @@ def create_task():
 
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
-    task = {
-        "id": tasks[-1]["id"] + 1,
-        "title": request_json["title"],
-        "description": request_json["description"],
-        "done": request_json["done"],
-    }
-    tasks.append(task)
-    return jsonify({"task": task}), 201
+
+    new_task = Tasks(
+        title=request_json["title"],
+        description=request_json["description"],
+        done=request_json["done"],
+    )
+    db.session.add(new_task)
+    db.session.commit()
+    return jsonify({"task": new_task.get_rep()}), 201
 
 
 @app.route("/todo/api/v1.0/tasks", methods=["PUT"])
@@ -124,17 +124,19 @@ def update_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    task_to_update = [task for task in tasks if task["id"] == request_json["id"]]
-    if len(task_to_update) == 0:
+    task_to_update = Tasks.query.filter_by(task_id=request_json["id"]).first()
+    if task_to_update is None:
         raise IdNotFoundException("Id not found")
 
-    task_to_update[0]["done"] = request_json["done"]
+    task_to_update.done = request_json["done"]
     if request_json.get("title"):
-        task_to_update[0]["title"] = request_json["title"]
+        task_to_update.title = request_json["title"]
     if request_json.get("description"):
-        task_to_update[0]["description"] = request_json["description"]
+        task_to_update.description = request_json["description"]
 
-    return jsonify({"task": task_to_update[0]})
+    db.session.commit()
+
+    return jsonify({"task": task_to_update.get_rep()})
 
 
 @app.route("/todo/api/v1.0/tasks", methods=["DELETE"])
@@ -147,8 +149,10 @@ def delete_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    task_to_delete = [task for task in tasks if task["id"] == request_json["id"]]
-    if len(task_to_delete) == 0:
+    task_to_delete = Tasks.query.filter_by(task_id=request_json["id"]).first()
+    if task_to_delete is None:
         raise IdNotFoundException("Id not found")
-    tasks.remove(task_to_delete[0])
-    return jsonify({"result": True, "task": task_to_delete[0]})
+    task=task_to_delete.get_rep()
+    db.session.delete(task_to_delete)
+    db.session.commit()
+    return jsonify({"result": True, "task": task})
