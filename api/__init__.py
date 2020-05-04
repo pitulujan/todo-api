@@ -1,8 +1,13 @@
 from flask import Flask
-from api.models import User
 from flask_httpauth import HTTPBasicAuth
+from sql_config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 auth = HTTPBasicAuth()
 
 
@@ -22,16 +27,11 @@ tasks = [
 ]
 
 
-
-pitu = User("pitu", "tuvieja", 1)
-julian = User("julian", "tuvieja", 2)
-users = [pitu, julian]
-
 private_key = open("jwt-key").read()
 public_key = open("jwt-key.pub").read()
 
 from api.errors import bp as errors_bp
+
 app.register_blueprint(errors_bp)
 
-from api import routes
-
+from api import routes, models

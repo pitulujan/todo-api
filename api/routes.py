@@ -2,44 +2,49 @@
 from flask import Flask, jsonify, abort, make_response, g, request
 from typing import Any
 import jwt
-from time import time 
-from api import app,auth, tasks,users,private_key,public_key
-from api.models import User
-from api.errors.api_errors import NotAuthorized,JSONValidationError,IdNotFoundException
-from api.json_validators import iterate_properties_updatetask, iterate_properties_newtask,iterate_properties_deletetask
+from time import time
+from api import app, auth, tasks, private_key, public_key
+from api.models import User, Tasks
+from api.errors.api_errors import (
+    NotAuthorized,
+    JSONValidationError,
+    IdNotFoundException,
+)
+from api.json_validators import (
+    iterate_properties_updatetask,
+    iterate_properties_newtask,
+    iterate_properties_deletetask,
+)
+
 
 @auth.verify_password
 def verify_password(username_or_token, password):
 
-    auth_header =  request.headers.get("Authorization", None)
+    auth_header = request.headers.get("Authorization", None)
 
     if auth_header is None:
         abort(401)
-    token = None 
+    token = None
 
     try:
-        auth_type,token = auth_header.strip().split(" ")
+        auth_type, token = auth_header.strip().split(" ")
     except:
         abort(401)
     if auth_type.lower() == "basic":
 
-        user = [
-            user
-            for user in users
-            if user._get_username() == username_or_token
-            and user._get_password() == password
-        ]
-        if not user:
+
+        user = User.query.filter_by(username=username_or_token).first()
+        if user is None or not user.check_password(password):
             return False
 
-        g.user = user[0]
+        g.user = user
         return True
-    
+
     elif auth_type.lower() == "bearer":
         user = verify_auth_token(token)
         if user is None:
             abort(401)
-        g.user = user[0]
+        g.user = user
         return True
     else:
         abort(401)
@@ -49,13 +54,13 @@ def verify_auth_token(token):
 
     try:
         payload = jwt.decode(token, public_key, algorithms=["RS256"])
-    
+
     except jwt.DecodeError:
         return None
     except jwt.ExpiredSignatureError:
         raise NotAuthorized("Token Expired")
 
-    user = [user for user in users if user._get_id() == payload["user_id"]]
+    user = User.query.filter_by(id=payload["user_id"]).first()
     return user
 
 
@@ -69,16 +74,24 @@ def get_token():
 @app.route("/todo/api/v1.0/tasks", methods=["GET"])
 @auth.login_required
 def get_tasks():
+    query_tasks = Tasks.query.all()
+
+    tasks = []
+
+    for task in query_tasks:
+        tasks.append({"title" : task.title,"description": task.description, "id" : task.task_id , "done" : task.done})
+
     return jsonify({"tasks": tasks})
 
 
 @app.route("/todo/api/v1.0/tasks/<int:task_id>", methods=["GET"])
 @auth.login_required
 def get_task(task_id):
-    task = [task for task in tasks if task["id"] == task_id]
-    if len(task) == 0:
+    query_task = Tasks.query.filter_by(task_id = task_id).first()
+    if query_task is None:
         raise IdNotFoundException("Id not found")
-    return jsonify({"task": task[0]})
+    task = {"title" : query_task.title,"description": query_task.description, "id" : query_task.task_id , "done" : query_task.done}
+    return jsonify({"tasks": task})
 
 
 @app.route("/todo/api/v1.0/tasks", methods=["POST"])
@@ -89,55 +102,53 @@ def create_task():
     request_json = request.get_json(force=True)
     parse_errors = iterate_properties_newtask(request_json)
 
-    if len(parse_errors) > 0: 
+    if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
     task = {
         "id": tasks[-1]["id"] + 1,
         "title": request_json["title"],
-        "description" : request_json["description"],
+        "description": request_json["description"],
         "done": request_json["done"],
     }
     tasks.append(task)
     return jsonify({"task": task}), 201
 
 
-@app.route('/todo/api/v1.0/tasks', methods=['PUT'])
+@app.route("/todo/api/v1.0/tasks", methods=["PUT"])
 @auth.login_required
 def update_task():
 
     request_json = request.get_json(force=True)
     parse_errors = iterate_properties_updatetask(request_json)
 
-    if len(parse_errors) > 0: 
+    if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    task_to_update = [task for task in tasks if task["id"] == request_json['id']]
+    task_to_update = [task for task in tasks if task["id"] == request_json["id"]]
     if len(task_to_update) == 0:
         raise IdNotFoundException("Id not found")
 
     task_to_update[0]["done"] = request_json["done"]
-    if request_json.get('title'):
+    if request_json.get("title"):
         task_to_update[0]["title"] = request_json["title"]
-    if request_json.get('description'):
+    if request_json.get("description"):
         task_to_update[0]["description"] = request_json["description"]
 
     return jsonify({"task": task_to_update[0]})
 
 
-@app.route('/todo/api/v1.0/tasks', methods=['DELETE'])
+@app.route("/todo/api/v1.0/tasks", methods=["DELETE"])
 @auth.login_required
 def delete_task():
 
     request_json = request.get_json(force=True)
     parse_errors = iterate_properties_deletetask(request_json)
 
-    if len(parse_errors) > 0: 
+    if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    task_to_delete = [task for task in tasks if task["id"] == request_json['id']]
+    task_to_delete = [task for task in tasks if task["id"] == request_json["id"]]
     if len(task_to_delete) == 0:
         raise IdNotFoundException("Id not found")
     tasks.remove(task_to_delete[0])
-    return jsonify({'result': True, "task" : task_to_delete[0]})
-
-
+    return jsonify({"result": True, "task": task_to_delete[0]})
