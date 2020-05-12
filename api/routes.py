@@ -152,7 +152,7 @@ def delete_task():
     task_to_delete = Tasks.query.filter_by(task_id=request_json["id"]).first()
     if task_to_delete is None:
         raise IdNotFoundException("Id not found")
-    task=task_to_delete.get_rep()
+    task = task_to_delete.get_rep()
     db.session.delete(task_to_delete)
     db.session.commit()
     return jsonify({"result": True, "task": task})
