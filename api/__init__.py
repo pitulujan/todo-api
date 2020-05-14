@@ -10,23 +10,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 auth = HTTPBasicAuth()
 
-
-tasks = [
-    {
-        "id": 1,
-        "title": u"Buy Groceries",
-        "description": "Milk,Cheese, Pizza,Fruit,Tylenol",
-        "done": False,
-    },
-    {
-        "id": 2,
-        "title": u"Learn French",
-        "description": "Get your ass to work",
-        "done": False,
-    },
-]
-
-
 private_key = open("jwt-key").read()
 public_key = open("jwt-key.pub").read()
 
