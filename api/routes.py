@@ -3,7 +3,7 @@ from flask import Flask, jsonify, abort, make_response, g, request
 from typing import Any
 import jwt
 from time import time
-from api import app, auth, tasks, private_key, public_key, db
+from api import app, auth, private_key, public_key, db
 from api.models import User, Tasks
 from api.errors.api_errors import (
     NotAuthorized,
@@ -21,6 +21,7 @@ from api.json_validators import (
 def verify_password(username_or_token, password):
 
     auth_header = request.headers.get("Authorization", None)
+    print(auth_header)
 
     if auth_header is None:
         abort(401)

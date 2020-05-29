@@ -1,0 +1,7 @@
+description: Authenticate user with supplied credentials.
+
+responses:
+  200:
+    description: User successfully logged in.
+  400:
+    description: User login failed.

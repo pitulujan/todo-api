@@ -1,0 +1,22 @@
+openapi: "2.0.0"
+info:
+  description: "Playing Around API"
+  version: "0.1"
+  title: "Nonsense API"
+  
+consumes: "application/x-www-form-urlencoded"
+produces: "application/json"
+  
+securityDefinitions:
+  basicAuth:
+    type: basic
+
+paths:
+  /todo/api/v1.0/tasks/token:
+    get:
+      # To apply Basic auth to an individual operation:
+      security:
+        - basicAuth: []
+      responses:
+        200:
+          description: OK (successfully authenticated)
