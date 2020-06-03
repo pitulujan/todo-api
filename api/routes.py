@@ -21,7 +21,6 @@ from api.json_validators import (
 def verify_password(username_or_token, password):
 
     auth_header = request.headers.get("Authorization", None)
-    print(auth_header)
 
     if auth_header is None:
         abort(401)
@@ -41,6 +40,7 @@ def verify_password(username_or_token, password):
         return True
 
     elif auth_type.lower() == "bearer":
+
         user = verify_auth_token(token)
         if user is None:
             abort(401)

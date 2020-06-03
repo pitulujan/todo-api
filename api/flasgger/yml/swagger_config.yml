@@ -1,22 +1,39 @@
-openapi: "2.0.0"
+openapi: 3.0.2
 info:
   description: "Playing Around API"
   version: "0.1"
   title: "Nonsense API"
+  summary: "Donde estas"
   
 consumes: "application/x-www-form-urlencoded"
 produces: "application/json"
   
-securityDefinitions:
-  basicAuth:
-    type: basic
+
+components:
+  securitySchemes:
+    basicAuth:     # <-- arbitrary name for the security scheme
+      type: http
+      scheme: basic
+  
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
 
 paths:
   /todo/api/v1.0/tasks/token:
     get:
-      # To apply Basic auth to an individual operation:
       security:
         - basicAuth: []
+      responses:
+        200:
+          description: OK (successfully authenticated)
+  
+  /todo/api/v1.0/tasks:
+    get:
+      security:
+        - Bearer: []
       responses:
         200:
           description: OK (successfully authenticated)

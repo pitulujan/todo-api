@@ -1,14 +1,8 @@
-summary: "Check Task"
-parameters:
-- in: "body"
-  name: "body"
-  description: "API Key deletion"
-  required: true
+summary: "Check Tasks"
 security:
 - api_key:
 responses:
   200:
-    description: "The ApiKey has been deleted"
-     
+    description: "Here are your tasks"   
   400:
-    description: "The ApiKey could not be deleted"
+    description: "Something went wrong"

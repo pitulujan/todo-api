@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_httpauth import HTTPBasicAuth
-from sql_config import Config
+from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flasgger import Swagger
