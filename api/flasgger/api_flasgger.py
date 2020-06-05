@@ -1,12 +1,22 @@
 from api.flasgger import bp_flasgger
-from flask import make_response, jsonify, g
+from flask import Flask, jsonify, abort, make_response, g, request
 from typing import Iterable
 from flasgger.utils import swag_from
-from api import auth
+from api import app, auth, private_key, public_key, db
 from api.models import User, Tasks
+from api.errors.api_errors import (
+    NotAuthorized,
+    JSONValidationError,
+    IdNotFoundException,
+)
+from api.json_validators import (
+    iterate_properties_updatetask,
+    iterate_properties_newtask,
+    iterate_properties_deletetask,
+)
 
 
-@bp_flasgger.route("/todo/api/v1.0/tasks", methods=["GET"])
+@bp_flasgger.route("/todo/api/v0.1/tasks", methods=["GET"])
 # @swag_from('yml/tasks_specs.yml',methods=['GET'])
 @auth.login_required
 def get_tasks():
@@ -20,14 +30,14 @@ def get_tasks():
     return jsonify({"tasks": tasks})
 
 
-@bp_flasgger.route("/todo/api/v1.0/tasks/token" ,methods=["GET"])
+@bp_flasgger.route("/todo/api/v0.1/tasks/token" ,methods=["GET"])
 # @swag_from('yml/login_specs.yml', methods=['GET'])
 @auth.login_required
 def get_token():
     token = g.user.generate_auth_token()
     return jsonify({"token": token})
 
-@bp_flasgger.route("/todo/api/v1.0/tasks/<int:task_id>", methods=["GET"])
+@bp_flasgger.route("/todo/api/v0.1/tasks/<int:task_id>", methods=["GET"])
 @auth.login_required
 def get_task(task_id):
     query_task = Tasks.query.filter_by(task_id=task_id).first()
@@ -37,7 +47,7 @@ def get_task(task_id):
     return jsonify({"tasks": query_task.get_rep()})
 
 
-@bp_flasgger.route("/todo/api/v1.0/tasks", methods=["POST"])
+@bp_flasgger.route("/todo/api/v0.1/tasks", methods=["POST"])
 @auth.login_required
 def create_task():
     if not request.json:
@@ -58,7 +68,7 @@ def create_task():
     return jsonify({"task": new_task.get_rep()}), 201
 
 
-@bp_flasgger.route("/todo/api/v1.0/tasks", methods=["PUT"])
+@bp_flasgger.route("/todo/api/v0.1/tasks", methods=["PUT"])
 @auth.login_required
 def update_task():
 
@@ -83,7 +93,7 @@ def update_task():
     return jsonify({"task": task_to_update.get_rep()})
 
 
-@bp_flasgger.route("/todo/api/v1.0/tasks", methods=["DELETE"])
+@bp_flasgger.route("/todo/api/v0.1/tasks", methods=["DELETE"])
 @auth.login_required
 def delete_task():
 

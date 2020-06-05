@@ -95,8 +95,9 @@ components:
 
 
 paths:
-  /todo/api/v1.0/tasks/token:
+  /todo/api/v0.1/tasks/token:
     get:
+      summary: Get JWT for authentication
       tags:
       - Token
       security:
@@ -105,8 +106,9 @@ paths:
         200:
           description: OK (successfully authenticated)
   
-  /todo/api/v1.0/tasks:
+  /todo/api/v0.1/tasks:
     get:
+      summary: Get a list of all the tasks
       tags:
         - Tasks
       security:
@@ -115,9 +117,11 @@ paths:
         200:
           description: OK (successfully authenticated)
     post:
+      summary: Add a new task
       tags:
         - Tasks
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -131,9 +135,11 @@ paths:
         200:
           description: OK (successfully authenticated)
     put:
+      summary: Update a task 
       tags:
         - Tasks
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -147,9 +153,11 @@ paths:
         200:
           description: OK (successfully authenticated)
     delete:
+      summary: Delete a task by ID
       tags:
         - Tasks
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -163,8 +171,16 @@ paths:
         200:
           description: OK (successfully authenticated)
 
-  /todo/api/v1.0/tasks/{id}:
+  /todo/api/v.1/tasks/{id}:
     get:
+      summary: Get a task by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the task to get
       tags:
         - Tasks
       security:
