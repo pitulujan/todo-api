@@ -1,7 +1,10 @@
-description: Authenticate user with supplied credentials.
-
-responses:
-  200:
-    description: User successfully logged in.
-  400:
-    description: User login failed.
+paths:
+  /todo/api/v1.0/tasks/token:
+    get:
+      tags:
+      - Token
+      security:
+        - basicAuth: []
+      responses:
+        200:
+          description: OK (successfully authenticated)

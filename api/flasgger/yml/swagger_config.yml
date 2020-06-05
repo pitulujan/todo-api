@@ -3,15 +3,18 @@ info:
   description: "Playing Around API"
   version: "0.1"
   title: "Nonsense API"
-  summary: "Donde estas"
-  
+  contact : 
+    responsibleOrganization: Martin Lujan
+    responsibleDeveloper: Martin Lujan
+    email: lujanmartin91@gmail.com
+    
 consumes: "application/x-www-form-urlencoded"
 produces: "application/json"
   
 
 components:
   securitySchemes:
-    basicAuth:     # <-- arbitrary name for the security scheme
+    basicAuth:     
       type: http
       scheme: basic
   
@@ -19,11 +22,83 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      
+  schemas:
+    New_Task:
+      title: New Task
+      type: object
+      properties:
+        done:
+          type: boolean
+          description: State of the task
+        description:
+          type: string
+          description: Description of the task
+        title:
+          type: string
+          description: Title of the task
+      required:
+        - done
+        - title
+        - description
+
+    Update_Task:
+      title: Update Task
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id of the task 
+        done:
+          type: boolean
+          description: State of the task 
+        description:
+          type: string
+          description: Description of the task
+        title:
+          type: string
+          description: Title of the task
+      required:
+        - id
+        - done
+      optional:
+        - description
+        - title
+
+    Delete_Task:
+      title: Delete Task
+      type : object
+      properties:
+        id:
+          type: integer
+          description: Id of the task
+      required:
+        - id 
+
+  examples:   # Sample object
+    new_task:
+      value:
+        done: false
+        title: Supermarket
+        description: Get milk
+
+    update_task:
+      value:
+        id: 10
+        done: false
+        title: Supermarket
+        description: Get milk
+
+    delete_task:
+      value:
+        id: 10
 
 
 paths:
   /todo/api/v1.0/tasks/token:
     get:
+      tags:
+      - Token
       security:
         - basicAuth: []
       responses:
@@ -32,8 +107,70 @@ paths:
   
   /todo/api/v1.0/tasks:
     get:
+      tags:
+        - Tasks
       security:
         - Bearer: []
       responses:
         200:
           description: OK (successfully authenticated)
+    post:
+      tags:
+        - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/New_Task'
+            examples:
+              New Task:
+                $ref: '#/components/examples/new_task'
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: OK (successfully authenticated)
+    put:
+      tags:
+        - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Update_Task'
+            examples:
+              Update Task:
+                $ref: '#/components/examples/update_task'
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: OK (successfully authenticated)
+    delete:
+      tags:
+        - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Delete_Task'
+            examples:
+              Delete Task:
+                $ref: '#/components/examples/delete_task'
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: OK (successfully authenticated)
+
+  /todo/api/v1.0/tasks/{id}:
+    get:
+      tags:
+        - Tasks
+      security:
+        - Bearer: []
+      responses:
+        200:
+          description: OK (successfully authenticated)
+
+
