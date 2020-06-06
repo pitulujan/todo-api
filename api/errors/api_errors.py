@@ -38,7 +38,7 @@ def respond_not_authorized(e: IdNotFoundException):
 
 @bp.app_errorhandler(404)
 def not_fount(error):
-    return make_response(jsonify({"error": "Not Found Vieja"})), 404
+    return make_response(jsonify({"error": "Not Found"})), 404
 
 
 @bp.app_errorhandler(401)
