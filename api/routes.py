@@ -15,6 +15,7 @@ from api.json_validators import (
     iterate_properties_newtask,
     iterate_properties_deletetask,
 )
+from flasgger.utils import swag_from
 
 
 @auth.verify_password
