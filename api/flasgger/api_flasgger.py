@@ -3,7 +3,7 @@ from flask import Flask, jsonify, abort, make_response, g, request
 from typing import Iterable
 from flasgger.utils import swag_from
 from api import app, auth, private_key, public_key, db
-from api.models import User, Tasks
+#from api.models import User, Tasks
 from api.errors.api_errors import (
     NotAuthorized,
     JSONValidationError,

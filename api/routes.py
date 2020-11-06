@@ -4,7 +4,7 @@ from typing import Any
 import jwt
 from time import time
 from api import app, auth, private_key, public_key, db
-from api.models import User, Tasks
+#from api.models import User, Tasks
 from api.errors.api_errors import (
     NotAuthorized,
     JSONValidationError,
