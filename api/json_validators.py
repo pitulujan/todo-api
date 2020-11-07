@@ -5,7 +5,7 @@ update_task = Draft7Validator(
     {
         "type": "object",
         "properties": {
-            "id": {"type": "integer", "description": "Id of the task to be modified",},
+            "id": {"type": "string", "description": "Id of the task to be modified",},
             "description": {
                 "type": "string",
                 "description": "Description of the task to be modified",
