@@ -2,16 +2,16 @@ from flask import Flask
 from flask_httpauth import HTTPBasicAuth
 from config import Config
 from mongo_conn import get_conn
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flasgger import Swagger
 import yaml
+from dotenv import load_dotenv
+import os 
 
-data = open("database_data.txt", "r")
-data = dict(zip(["username", "password", "db_name"], data.read().split(":")))
+load_dotenv(".env")
+
 app = Flask(__name__)
 app.config.from_object(Config)
-db = get_conn(data["username"], data["password"], data["db_name"])
+db = get_conn(os.environ['MONGO_USER'], os.environ['MONGO_PASS'], os.environ['MONGO_DB'])
 auth = HTTPBasicAuth()
 
 private_key = open("jwt-key").read()
