@@ -3,7 +3,7 @@ from flask import Flask, jsonify, abort, make_response, g, request
 from typing import Iterable
 from flasgger.utils import swag_from
 from api import app, auth, private_key, public_key, db
-from api.models import User, Tasks, get_tasks_list
+from api.models import User, get_tasks_list
 from api.errors.api_errors import (
     NotAuthorized,
     JSONValidationError,
@@ -35,7 +35,6 @@ def get_token():
 # @swag_from("yml/get_task_by_id.yml",methods=['GET'])
 @auth.login_required
 def get_task(task_id):
-    print(task_id)
     tasks = get_tasks_list(task_id)
     if len(tasks) == 0:
         raise IdNotFoundException("Id not found")

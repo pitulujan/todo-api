@@ -6,7 +6,6 @@ from bson.objectid import ObjectId
 from api.errors.api_errors import InvalidId
 
 
-# private_key = open("jwt-key").read()
 class User:
     def __init__(self, username, password, id, admin=False):
         self.username = username
@@ -39,22 +38,6 @@ def get_user_by_id(_id):
         user = User(user["username"], user["password"], str(user["_id"]), user["admin"])
 
     return user
-
-
-class Tasks:
-    def __init__(self, task_id, description, title, done=False):
-        self.task_id = task_id
-        self.description = description
-        self.title = title
-        self.done = done
-
-    def get_rep(self):
-        return {
-            "title": self.title,
-            "description": self.description,
-            "id": self.task_id,
-            "done": self.done,
-        }
 
 
 def get_tasks_list(_id=None):

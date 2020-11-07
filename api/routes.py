@@ -4,7 +4,7 @@ from typing import Any
 import jwt
 from time import time
 from api import app, auth, private_key, public_key, db
-from api.models import User, Tasks, get_user, get_user_by_id, get_tasks_list
+from api.models import User, get_user, get_user_by_id, get_tasks_list
 from api.errors.api_errors import (
     NotAuthorized,
     JSONValidationError,
@@ -77,14 +77,14 @@ def get_tasks():
     return jsonify({"tasks": tasks})
 
 
-@app.route("/todo/api/v1.0/tasks/<int:task_id>", methods=["GET"])
+@app.route("/todo/api/v1.0/tasks/<string:task_id>", methods=["GET"])
 @auth.login_required
 def get_task(task_id):
-    query_task = Tasks.query.filter_by(task_id=task_id).first()
-    if query_task is None:
+    tasks = get_tasks_list(task_id)
+    if len(tasks) == 0:
         raise IdNotFoundException("Id not found")
 
-    return jsonify({"tasks": query_task.get_rep()})
+    return jsonify({"tasks": tasks})
 
 
 @app.route("/todo/api/v1.0/tasks", methods=["POST"])
