@@ -4,7 +4,7 @@ from typing import Any
 import jwt
 from time import time
 from api import app, auth, private_key, public_key, db
-#from api.models import User, Tasks
+from api.models import User, Tasks, get_user, get_user_by_id, get_tasks_list
 from api.errors.api_errors import (
     NotAuthorized,
     JSONValidationError,
@@ -33,10 +33,9 @@ def verify_password(username_or_token, password):
         abort(401)
     if auth_type.lower() == "basic":
 
-        user = User.query.filter_by(username=username_or_token).first()
+        user = get_user(username_or_token)
         if user is None or not user.check_password(password):
             return False
-
         g.user = user
         return True
 
@@ -60,8 +59,7 @@ def verify_auth_token(token):
         return None
     except jwt.ExpiredSignatureError:
         raise NotAuthorized("Token Expired")
-
-    user = User.query.filter_by(id=payload["user_id"]).first()
+    user = get_user_by_id(_id=payload["user_id"])
     return user
 
 
@@ -75,13 +73,7 @@ def get_token():
 @app.route("/todo/api/v1.0/tasks", methods=["GET"])
 @auth.login_required
 def get_tasks():
-    query_tasks = Tasks.query.all()
-
-    tasks = []
-
-    for task in query_tasks:
-        tasks.append(task.get_rep())
-
+    tasks = get_tasks()
     return jsonify({"tasks": tasks})
 
 

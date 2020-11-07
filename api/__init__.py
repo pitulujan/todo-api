@@ -8,10 +8,10 @@ from flasgger import Swagger
 import yaml
 
 data = open("database_data.txt", "r")
-data = dict(zip(['username','password','db_name'],data.read().split(':')))
+data = dict(zip(["username", "password", "db_name"], data.read().split(":")))
 app = Flask(__name__)
 app.config.from_object(Config)
-db = get_conn(data['username'],data['password'],data['db_name'])
+db = get_conn(data["username"], data["password"], data["db_name"])
 auth = HTTPBasicAuth()
 
 private_key = open("jwt-key").read()
