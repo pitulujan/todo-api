@@ -31,15 +31,16 @@ def get_token():
     return jsonify({"token": token})
 
 
-@bp_flasgger.route("/todo/api/v0.1/tasks/<int:task_id>", methods=["GET"])
+@bp_flasgger.route("/todo/api/v0.1/tasks/<string:task_id>", methods=["GET"])
 # @swag_from("yml/get_task_by_id.yml",methods=['GET'])
 @auth.login_required
 def get_task(task_id):
-    query_task = Tasks.query.filter_by(task_id=task_id).first()
-    if query_task is None:
+    print(task_id)
+    tasks = get_tasks_list(task_id)
+    if len(tasks) == 0:
         raise IdNotFoundException("Id not found")
 
-    return jsonify({"tasks": query_task.get_rep()})
+    return jsonify({"tasks": tasks})
 
 
 @bp_flasgger.route("/todo/api/v0.1/tasks", methods=["POST"])

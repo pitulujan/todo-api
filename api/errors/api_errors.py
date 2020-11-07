@@ -36,6 +36,16 @@ def respond_not_authorized(e: IdNotFoundException):
     return jsonify({"error": e.get_json_repr()}), 400
 
 
+class InvalidId(Exception):
+    def get_json_repr(self):
+        return str(self)
+
+
+@bp.app_errorhandler(InvalidId)
+def respond_not_authorized(e: InvalidId):
+    return jsonify({"error": e.get_json_repr()}), 400
+
+
 @bp.app_errorhandler(404)
 def not_fount(error):
     return make_response(jsonify({"error": "Not Found"})), 404

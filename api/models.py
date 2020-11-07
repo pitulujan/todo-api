@@ -3,6 +3,7 @@ import jwt
 from time import time
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
+from api.errors.api_errors import InvalidId
 
 
 # private_key = open("jwt-key").read()
@@ -59,14 +60,19 @@ class Tasks:
 def get_tasks_list(_id=None):
     tasks = []
     if _id is not None:
-        tasks_mongo = db.tasks_bucket.find_one({"_id": _id})
-        task = {
-            "title": t["title"],
-            "description": t["description"],
-            "id": str(t["_id"]),
-            "done": t["done"],
-        }
-        tasks.append(task)
+        try:
+            tasks_mongo = db.tasks_bucket.find_one({"_id": ObjectId(_id)})
+        except:
+            raise InvalidId("Not supported Id type")
+
+        if tasks_mongo is not None:
+            task = {
+                "title": tasks_mongo["title"],
+                "description": tasks_mongo["description"],
+                "id": str(tasks_mongo["_id"]),
+                "done": tasks_mongo["done"],
+            }
+            tasks.append(task)
     else:
 
         tasks_mongo = db.tasks_bucket.find({})
