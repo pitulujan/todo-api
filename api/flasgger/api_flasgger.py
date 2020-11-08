@@ -103,10 +103,12 @@ def delete_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    task_to_delete = Tasks.query.filter_by(task_id=request_json["id"]).first()
-    if task_to_delete is None:
+    task = get_tasks_list(request_json["id"])
+    if len(task) == 0:
         raise IdNotFoundException("Id not found")
-    task = task_to_delete.get_rep()
-    db.session.delete(task_to_delete)
-    db.session.commit()
+
+    db.tasks_bucket.delete_one(
+        {"_id": ObjectId(request_json["id"])}
+    )
+
     return jsonify({"result": True, "task": task})

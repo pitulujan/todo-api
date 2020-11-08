@@ -117,20 +117,24 @@ def update_task():
 
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
-
-    task_to_update = Tasks.query.filter_by(task_id=request_json["id"]).first()
-    if task_to_update is None:
+    task = get_tasks_list(request_json["id"])
+    if len(task) == 0:
         raise IdNotFoundException("Id not found")
-
-    task_to_update.done = request_json["done"]
+    task = task[0]
+    task_to_update = {}
+    task_to_update["done"] = task["done"] = request_json["done"]
     if request_json.get("title"):
-        task_to_update.title = request_json["title"]
+        task_to_update["title"] = task["title"] = request_json["title"]
     if request_json.get("description"):
-        task_to_update.description = request_json["description"]
+        task_to_update["description"] = task["description"] = request_json[
+            "description"
+        ]
 
-    db.session.commit()
+    db.tasks_bucket.update_one(
+        {"_id": ObjectId(request_json["id"])}, {"$set": task_to_update}
+    )
 
-    return jsonify({"task": task_to_update.get_rep()})
+    return jsonify({"task": task})
 
 
 @app.route("/todo/api/v1.0/tasks", methods=["DELETE"])
@@ -143,10 +147,12 @@ def delete_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    task_to_delete = Tasks.query.filter_by(task_id=request_json["id"]).first()
-    if task_to_delete is None:
+    task = get_tasks_list(request_json["id"])
+    if len(task) == 0:
         raise IdNotFoundException("Id not found")
-    task = task_to_delete.get_rep()
-    db.session.delete(task_to_delete)
-    db.session.commit()
+
+    db.tasks_bucket.delete_one(
+        {"_id": ObjectId(request_json["id"])}
+    )
+
     return jsonify({"result": True, "task": task})
