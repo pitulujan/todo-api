@@ -98,14 +98,16 @@ def create_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    new_task = Tasks(
-        title=request_json["title"],
-        description=request_json["description"],
-        done=request_json["done"],
-    )
-    db.session.add(new_task)
-    db.session.commit()
-    return jsonify({"task": new_task.get_rep()}), 201
+    new_task = {
+        'title' : request_json["title"],
+        'description' : request_json["description"],
+        "done":request_json["done"]}
+    
+    db.tasks_bucket.insert_one(new_task)
+    new_task['id']=str(new_task['_id'])
+    new_task.pop('_id', None)
+    
+    return jsonify({"task": new_task }), 201
 
 
 @app.route("/todo/api/v1.0/tasks", methods=["PUT"])
