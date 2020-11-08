@@ -5,13 +5,15 @@ from mongo_conn import get_conn
 from flasgger import Swagger
 import yaml
 from dotenv import load_dotenv
-import os 
+import os
 
 load_dotenv(".env")
 
 app = Flask(__name__)
 app.config.from_object(Config)
-db = get_conn(os.environ['MONGO_USER'], os.environ['MONGO_PASS'], os.environ['MONGO_DB'])
+db = get_conn(
+    os.environ["MONGO_USER"], os.environ["MONGO_PASS"], os.environ["MONGO_DB"]
+)
 auth = HTTPBasicAuth()
 
 private_key = open("jwt-key").read()

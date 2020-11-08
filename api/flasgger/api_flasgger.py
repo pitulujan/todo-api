@@ -55,15 +55,16 @@ def create_task():
         raise JSONValidationError(parse_errors)
 
     new_task = {
-        'title' : request_json["title"],
-        'description' : request_json["description"],
-        "done":request_json["done"]}
-    
+        "title": request_json["title"],
+        "description": request_json["description"],
+        "done": request_json["done"],
+    }
+
     db.tasks_bucket.insert_one(new_task)
-    new_task['id']=str(new_task['_id'])
-    new_task.pop('_id', None)
-    
-    return jsonify({"task": new_task }), 201
+    new_task["id"] = str(new_task["_id"])
+    new_task.pop("_id", None)
+
+    return jsonify({"task": new_task}), 201
 
 
 @bp_flasgger.route("/todo/api/v0.1/tasks", methods=["PUT"])
@@ -109,8 +110,6 @@ def delete_task():
     if len(task) == 0:
         raise IdNotFoundException("Id not found")
 
-    db.tasks_bucket.delete_one(
-        {"_id": ObjectId(request_json["id"])}
-    )
+    db.tasks_bucket.delete_one({"_id": ObjectId(request_json["id"])})
 
     return jsonify({"result": True, "task": task})
