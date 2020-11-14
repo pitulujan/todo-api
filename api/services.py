@@ -29,7 +29,7 @@ class Service:
         if tasks_mongo is not None:
             tasks = [TaskSchema().dump(tasks_mongo)]
         else:
-            tasks = tasks_mongo
+            tasks = []
 
     else:
 
@@ -55,5 +55,5 @@ class Service:
       return task
 
   def delete_task(self, _id):
-    records_affected = self.repo_client.delete({'user_id': self.user_id, 'repo_id': repo_id})
-    return records_affected > 0
+      records_affected = self.repo_client.delete({"_id": ObjectId(_id)},'tasks_bucket')
+      return records_affected > 0
