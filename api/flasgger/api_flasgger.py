@@ -35,7 +35,7 @@ def get_token():
 # @swag_from("yml/get_task_by_id.yml",methods=['GET'])
 @auth.login_required
 def get_task(task_id):
-    tasks = conn.find_task(id_=task_id)
+    tasks = conn.find_task(_id=task_id)
     if len(tasks) == 0:
         raise IdNotFoundException("Id not found")
 
@@ -71,13 +71,12 @@ def update_task():
     task = conn.find_task(_id=request_json["_id"])
     if len(task) == 0:
         raise IdNotFoundException("Id not found")
-    task = task[0]
-
+    task_to_update = {}
     task_to_update["done"] = request_json["done"]
     if request_json.get("title"):
-        task_to_update["title"] = task["title"] = request_json["title"]
+        task_to_update["title"] = request_json["title"]
     if request_json.get("description"):
-        task_to_update["description"] = task["description"] = request_json[
+        task_to_update["description"]  = request_json[
             "description"
         ]
     task = conn.update_task(task[0], task_to_update)

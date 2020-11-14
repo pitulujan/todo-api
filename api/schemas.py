@@ -3,7 +3,7 @@ from api.models import User
 
 
 class TaskSchema(Schema):
-    id = fields.Str(required=True)
+    _id = fields.Str(required=True)
     title = fields.Str()
     description = fields.Str()
     done = fields.Bool()

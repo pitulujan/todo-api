@@ -12,11 +12,13 @@ class Service:
     def find_user(self, username=None, _id=None):
         if username is not None:
             user = self.repo_client.find_one({"username": username}, "users")
+            user['_id'] = str(user['_id']) 
             if user is not None:
                 user = UserSchema().load(user)
         else:
-            user = db.users.find_one({"_id": ObjectId(_id)}, "users")
+            user = self.repo_client.find_one({"_id": ObjectId(_id)}, "users")
             if user is not None:
+                user['_id'] = str(user['_id'])
                 user = UserSchema().load(user)
         return user
 

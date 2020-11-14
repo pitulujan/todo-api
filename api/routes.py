@@ -32,7 +32,7 @@ def verify_password(username_or_token, password):
         abort(401)
     if auth_type.lower() == "basic":
 
-        user = get_user(username_or_token)
+        user = conn.find_user(username_or_token)
         if user is None or not user.check_password(password):
             return False
         g.user = user
@@ -58,7 +58,7 @@ def verify_auth_token(token):
         return None
     except jwt.ExpiredSignatureError:
         raise NotAuthorized("Token Expired")
-    user = get_user_by_id(_id=payload["user_id"])
+    user = conn.find_user(_id=payload["user_id"])
     return user
 
 
