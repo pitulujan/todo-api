@@ -2,8 +2,7 @@ from api.flasgger import bp_flasgger
 from flask import Flask, jsonify, abort, make_response, g, request
 from typing import Iterable
 from flasgger.utils import swag_from
-from api import app, auth, private_key, public_key, db
-from api.models import User, get_tasks_list
+from api import app, auth, private_key, public_key, conn
 from api.errors.api_errors import (
     NotAuthorized,
     JSONValidationError,
@@ -20,7 +19,7 @@ from bson.objectid import ObjectId
 @bp_flasgger.route("/todo/api/v0.1/tasks", methods=["GET"])
 @auth.login_required
 def get_tasks():
-    tasks = get_tasks_list()
+    tasks = conn.find_task()
     return jsonify({"tasks": tasks})
 
 
@@ -36,7 +35,7 @@ def get_token():
 # @swag_from("yml/get_task_by_id.yml",methods=['GET'])
 @auth.login_required
 def get_task(task_id):
-    tasks = get_tasks_list(task_id)
+    tasks = conn.find_task(id_=task_id)
     if len(tasks) == 0:
         raise IdNotFoundException("Id not found")
 
@@ -54,16 +53,9 @@ def create_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    new_task = {
-        "title": request_json["title"],
-        "description": request_json["description"],
-        "done": request_json["done"],
-    }
-
-    db.tasks_bucket.insert_one(new_task)
-    new_task["id"] = str(new_task["_id"])
-    new_task.pop("_id", None)
-
+    new_task = conn.create_task(
+        request_json["title"], request_json["description"], request_json["done"]
+    )
     return jsonify({"task": new_task}), 201
 
 
@@ -76,23 +68,19 @@ def update_task():
 
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
-    task = get_tasks_list(request_json["_id"])
+    task = conn.find_task(_id=request_json["_id"])
     if len(task) == 0:
         raise IdNotFoundException("Id not found")
     task = task[0]
-    task_to_update = {}
-    task_to_update["done"] = task["done"] = request_json["done"]
+
+    task_to_update["done"] = request_json["done"]
     if request_json.get("title"):
         task_to_update["title"] = task["title"] = request_json["title"]
     if request_json.get("description"):
         task_to_update["description"] = task["description"] = request_json[
             "description"
         ]
-
-    db.tasks_bucket.update_one(
-        {"_id": ObjectId(request_json["id"])}, {"$set": task_to_update}
-    )
-
+    task = conn.update_task(task[0], task_to_update)
     return jsonify({"task": task})
 
 
@@ -106,10 +94,10 @@ def delete_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    task = get_tasks_list(request_json["_id"])
+    task = conn.find_task(_id=request_json["_id"])
     if len(task) == 0:
         raise IdNotFoundException("Id not found")
 
-    db.tasks_bucket.delete_one({"_id": ObjectId(request_json["id"])})
+    deleted_task = conn.delete_task(task)
 
-    return jsonify({"result": True, "task": task})
+    return jsonify({"result": True, "task": deleted_task})

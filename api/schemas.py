@@ -1,12 +1,12 @@
-from marshmallow import Schema, fields,post_load
+from marshmallow import Schema, fields, post_load
 from api.models import User
 
 
 class TaskSchema(Schema):
-  id = fields.Str(required=True)
-  title = fields.Str()
-  description = fields.Str()
-  done = fields.Bool()
+    id = fields.Str(required=True)
+    title = fields.Str()
+    description = fields.Str()
+    done = fields.Bool()
 
 
 class UserSchema(Schema):

@@ -20,7 +20,8 @@ private_key = open("jwt-key").read()
 public_key = open("jwt-key.pub").read()
 
 from api.services import Service
-db = Service()
+
+conn = Service()
 
 from api.errors import bp as errors_bp
 from api.flasgger import bp_flasgger as flasgger_bp

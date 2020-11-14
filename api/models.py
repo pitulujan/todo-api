@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User:
-    def __init__(self,_id, username, password,  admin=False):
+    def __init__(self, _id, username, password, admin=False):
         self.username = username
         self.password_hash = password
         self.id = _id
@@ -20,5 +20,3 @@ class User:
     def generate_auth_token(self, expiration=600):
         payload = {"user_id": self.id, "exp": time() + expiration}
         return jwt.encode(payload, private_key, algorithm="RS256").decode("utf-8")
-
-
