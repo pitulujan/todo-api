@@ -62,7 +62,6 @@ class Service:
         return task
 
     def delete_task(self, task):
-        print(task)
         records_affected = self.repo_client.delete(
             {"_id": ObjectId(task["_id"])}, "tasks_bucket"
         )
