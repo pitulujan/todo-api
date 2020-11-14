@@ -98,12 +98,6 @@ def create_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    new_task = {
-        "title": request_json["title"],
-        "description": request_json["description"],
-        "done": request_json["done"],
-    }
-
     db.tasks_bucket.insert_one(new_task)
     new_task["id"] = str(new_task["_id"])
     new_task.pop("_id", None)
@@ -120,7 +114,7 @@ def update_task():
 
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
-    task = get_tasks_list(request_json["id"])
+    task = get_tasks_list(request_json["_id"])
     if len(task) == 0:
         raise IdNotFoundException("Id not found")
     task = task[0]
@@ -150,7 +144,7 @@ def delete_task():
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
 
-    task = get_tasks_list(request_json["id"])
+    task = get_tasks_list(request_json["_id"])
     if len(task) == 0:
         raise IdNotFoundException("Id not found")
 

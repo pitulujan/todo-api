@@ -5,12 +5,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 from api.errors.api_errors import InvalidId
 
-
 class User:
-    def __init__(self, username, password, id, admin=False):
+    def __init__(self,_id, username, password,  admin=False):
         self.username = username
         self.password_hash = password
-        self.id = id
+        self.id = _id
         self.admin = admin
 
     # def set_password(self, password):

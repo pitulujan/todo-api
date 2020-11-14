@@ -5,7 +5,7 @@ update_task = Draft7Validator(
     {
         "type": "object",
         "properties": {
-            "id": {"type": "string", "description": "Id of the task to be modified",},
+            "_id": {"type": "string", "description": "Id of the task to be modified",},
             "description": {
                 "type": "string",
                 "description": "Description of the task to be modified",
@@ -20,7 +20,7 @@ update_task = Draft7Validator(
                 "maxLength": 256,
             },
         },
-        "required": ["id", "done"],
+        "required": ["_id", "done"],
     }
 )
 
@@ -74,9 +74,9 @@ delete_task = Draft7Validator(
     {
         "type": "object",
         "properties": {
-            "id": {"type": "string", "description": "Id of the task to be modified",},
+            "_id": {"type": "string", "description": "Id of the task to be modified",},
         },
-        "required": ["id"],
+        "required": ["_id"],
     }
 )
 

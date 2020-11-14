@@ -46,8 +46,8 @@ components:
       title: Update Task
       type: object
       properties:
-        id:
-          type: integer
+        _id:
+          type: string
           description: Id of the task 
         done:
           type: boolean
@@ -59,7 +59,7 @@ components:
           type: string
           description: Title of the task
       required:
-        - id
+        - _id
         - done
       optional:
         - description
@@ -69,11 +69,11 @@ components:
       title: Delete Task
       type : object
       properties:
-        id:
+        _id:
           type: integer
           description: Id of the task
       required:
-        - id 
+        - _id 
 
   examples:
     new_task:
@@ -188,12 +188,12 @@ paths:
         400:
           description : Bad Request
 
-  /todo/api/v0.1/tasks/{id}:
+  /todo/api/v0.1/tasks/{_id}:
     get:
       summary: Get a task by ID
       parameters:
         - in: path
-          name: id
+          name: _id
           schema:
             type: string
           required: true
