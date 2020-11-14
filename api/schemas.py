@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields,post_load
-from models import User
+from api.models import User
 
 
 class TaskSchema(Schema):

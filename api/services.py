@@ -1,6 +1,6 @@
 from repos import Repository
 from repos.mongo import MongoRepository
-from schema import TaskSchema,UserSchema
+from api.schemas import TaskSchema,UserSchema
 from bson.objectid import ObjectId
 from api.errors.api_errors import InvalidId
 
