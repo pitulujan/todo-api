@@ -19,7 +19,7 @@ class MongoRepository:
         return self.db[collection_name].insert_one(task)
 
     def update_one(self, selector, task, collection_name):
-        return self.db[collection_name].replace_one(selector, task).modified_count
+        return self.db[collection_name].update_one(selector, task).modified_count
 
     def delete(self, selector, collection_name):
         return self.db[collection_name].delete_one(selector).deleted_count

@@ -76,9 +76,7 @@ def update_task():
     if request_json.get("title"):
         task_to_update["title"] = request_json["title"]
     if request_json.get("description"):
-        task_to_update["description"]  = request_json[
-            "description"
-        ]
+        task_to_update["description"] = request_json["description"]
     task = conn.update_task(task[0], task_to_update)
     return jsonify({"task": task})
 
@@ -97,6 +95,6 @@ def delete_task():
     if len(task) == 0:
         raise IdNotFoundException("Id not found")
 
-    deleted_task = conn.delete_task(task)
+    deleted_task = conn.delete_task(task[0])
 
     return jsonify({"result": True, "task": deleted_task})

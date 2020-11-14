@@ -70,7 +70,7 @@ components:
       type : object
       properties:
         _id:
-          type: integer
+          type: string
           description: Id of the task
       required:
         - _id 
@@ -84,14 +84,14 @@ components:
 
     update_task:
       value:
-        id: 10
+        _id: 5fa7ec0d6726aa3a64ea2e90
         done: false
         title: Supermarket
         description: Get milk
 
     delete_task:
       value:
-        id: 10
+        _id: 5fa7ec0d6726aa3a64ea2e90
 
     id_not_found:
       error: Id not found
