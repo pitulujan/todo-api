@@ -33,4 +33,4 @@ In order to run the application, first you should create a private-public key pa
 |   └── run.py
 ```
 
-Then simply create a virtual environment, install requirements.txt and run.py!
+Then simply create a virtual environment, install requirements.txt, run.py and navigate to http://localhost:5000/apidocs/#/!

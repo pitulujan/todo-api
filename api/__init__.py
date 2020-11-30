@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_httpauth import HTTPBasicAuth
 from config import Config
-from mongo_conn import get_conn
 from flasgger import Swagger
 import yaml
 from dotenv import load_dotenv
