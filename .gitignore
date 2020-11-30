@@ -5,3 +5,9 @@ test_validator.py
 ./api/__pycache__
 ./api/errors/__pycache__
 venv/
+.env
+__pycache__/
+api/__pycache__/
+api/errors/__pycache__/
+api/flasgger/
+repos/
