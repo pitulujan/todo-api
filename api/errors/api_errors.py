@@ -1,6 +1,7 @@
-from api.errors import bp
-from flask import make_response, jsonify
 from typing import Iterable
+
+from api.errors import bp
+from flask import jsonify, make_response
 
 
 class NotAuthorized(Exception):

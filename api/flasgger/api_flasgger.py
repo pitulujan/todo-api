@@ -1,17 +1,17 @@
-from api.flasgger import bp_flasgger
-from flask import Flask, jsonify, abort, make_response, g, request
-from api import app, auth, private_key, public_key, conn
+from api import app, auth, conn, private_key, public_key
 from api.errors.api_errors import (
-    NotAuthorized,
-    JSONValidationError,
     IdNotFoundException,
+    JSONValidationError,
+    NotAuthorized,
 )
+from api.flasgger import bp_flasgger
 from api.json_validators import (
-    iterate_properties_updatetask,
-    iterate_properties_newtask,
     iterate_properties_deletetask,
+    iterate_properties_newtask,
+    iterate_properties_updatetask,
 )
 from bson.objectid import ObjectId
+from flask import Flask, abort, g, jsonify, make_response, request
 
 
 @bp_flasgger.route("/todo/api/v0.1/tasks", methods=["GET"])

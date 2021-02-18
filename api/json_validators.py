@@ -1,6 +1,7 @@
-from jsonschema import validate, Draft7Validator
 from itertools import islice
 from typing import List
+
+from jsonschema import Draft7Validator, validate
 
 update_task = Draft7Validator(
     {
