@@ -22,7 +22,7 @@ class JSONValidationError(Exception):
 
 
 @bp.app_errorhandler(JSONValidationError)
-def respond_not_authorized(e: JSONValidationError):
+def respond_not_authorized_JSONValidationError(e: JSONValidationError):
     return jsonify(e.get_json_repr()), 400
 
 
@@ -32,7 +32,7 @@ class IdNotFoundException(Exception):
 
 
 @bp.app_errorhandler(IdNotFoundException)
-def respond_not_authorized(e: IdNotFoundException):
+def respond_not_authorized_IdNotFoundException(e: IdNotFoundException):
     return jsonify({"error": e.get_json_repr()}), 400
 
 
@@ -42,17 +42,17 @@ class InvalidId(Exception):
 
 
 @bp.app_errorhandler(InvalidId)
-def respond_not_authorized(e: InvalidId):
+def respond_not_authorized_InvalidId(e: InvalidId):
     return jsonify({"error": e.get_json_repr()}), 400
 
 
 @bp.app_errorhandler(404)
-def not_fount(error):
+def not_found_404(error):
     return make_response(jsonify({"error": "Not Found"})), 404
 
 
 @bp.app_errorhandler(401)
-def not_fount(error):
+def not_found_401(error):
     return (
         make_response(
             jsonify(

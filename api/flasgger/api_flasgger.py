@@ -1,7 +1,5 @@
 from api.flasgger import bp_flasgger
 from flask import Flask, jsonify, abort, make_response, g, request
-from typing import Iterable
-from flasgger.utils import swag_from
 from api import app, auth, private_key, public_key, conn
 from api.errors.api_errors import (
     NotAuthorized,

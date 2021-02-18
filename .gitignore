@@ -10,3 +10,5 @@ __pycache__
 migrations
 database_data.txt
 .env
+.mypy_cache
+.pytest_cache
