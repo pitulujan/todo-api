@@ -22,15 +22,19 @@ In order to run the application, first you should create a private-public key pa
 │   │   └── errors             
 │   │        ├── __init__.py 
 │   │        └──  api_errors.
+│   ├── enviroment
+│   │    ├── req_deploy.txt
+│   │    └── req_dev.txt
+│   ├── hooks
+│   │    └── pre-commit-config.yaml
 │   ├── repos
 │   │    ├── __init__.py
 │   │    └── mongo.py
 │   ├── jwt-key              # User should create it and paste it here 
 |   ├── jwt-key.pub          # User should create it and paste it here
-|   ├── requirements.txt
 |   ├── .env                 # MONGO_URL = 'mongodb+srv://``user``:```pass```@cluster0.jqc5t.mongodb.net/``cluster``?retryWrites=true&w=majority'
 |   ├── config.py                 
 |   └── run.py
 ```
 
-Then simply create a virtual environment, install requirements.txt, run.py and navigate to http://localhost:5000/apidocs/#/!
+Then simply create a virtual environment, install req_deploy.txt, run.py and navigate to http://localhost:5000/apidocs/#/!
