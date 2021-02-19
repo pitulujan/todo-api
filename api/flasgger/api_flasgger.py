@@ -1,17 +1,12 @@
-from api import app, auth, conn, private_key, public_key
-from api.errors.api_errors import (
-    IdNotFoundException,
-    JSONValidationError,
-    NotAuthorized,
-)
+from api import auth, conn
+from api.errors.api_errors import IdNotFoundException, JSONValidationError
 from api.flasgger import bp_flasgger
 from api.json_validators import (
     iterate_properties_deletetask,
     iterate_properties_newtask,
     iterate_properties_updatetask,
 )
-from bson.objectid import ObjectId
-from flask import Flask, abort, g, jsonify, make_response, request
+from flask import abort, g, jsonify, request
 
 
 @bp_flasgger.route("/todo/api/v0.1/tasks", methods=["GET"])
@@ -50,7 +45,9 @@ def create_task():
         raise JSONValidationError(parse_errors)
 
     new_task = conn.create_task(
-        request_json["title"], request_json["description"], request_json["done"]
+        request_json["title"],
+        request_json["description"],
+        request_json["done"],
     )
     return jsonify({"task": new_task}), 201
 
