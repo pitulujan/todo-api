@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_httpauth import HTTPBasicAuth
-from config import Config
+from config.config import Config
 from flasgger import Swagger
 import yaml
 from dotenv import load_dotenv
