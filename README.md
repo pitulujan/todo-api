@@ -19,9 +19,14 @@ In order to run the application, first you should create a private-public key pa
 │   │   ├── json_validators.py
 │   │   ├── models.py
 │   │   ├── routes.py
-│   │   └── errors             
+│   │   ├── errors          # Errors blueprint
+│   │   |    ├── __init__.py 
+│   │   |    └──  api_errors.py
+│   │   └── flassger        # Flasgger blueprint
+│   │        ├── yml
+│   │        |   └── swagger_config.yml             
 │   │        ├── __init__.py 
-│   │        └──  api_errors.py
+│   │        └──  api_flasgger.py
 │   ├── config
 │   │    └── config.py
 │   ├── enviroment
