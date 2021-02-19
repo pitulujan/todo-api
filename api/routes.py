@@ -1,9 +1,7 @@
 #!venv/bin/python
-from time import time
-from typing import Any
 
 import jwt
-from api import app, auth, conn, private_key, public_key
+from api import app, auth, conn, public_key
 from api.errors.api_errors import (
     IdNotFoundException,
     JSONValidationError,
@@ -14,8 +12,7 @@ from api.json_validators import (
     iterate_properties_newtask,
     iterate_properties_updatetask,
 )
-from flasgger.utils import swag_from
-from flask import Flask, abort, g, jsonify, make_response, request
+from flask import abort, g, jsonify, request
 
 
 @auth.verify_password
@@ -29,7 +26,7 @@ def verify_password(username_or_token, password):
 
     try:
         auth_type, token = auth_header.strip().split(" ")
-    except:
+    except:  # noqa : E722
         abort(401)
     if auth_type.lower() == "basic":
 
@@ -99,7 +96,9 @@ def create_task():
         raise JSONValidationError(parse_errors)
 
     new_task = conn.create_task(
-        request_json["title"], request_json["description"], request_json["done"]
+        request_json["title"],
+        request_json["description"],
+        request_json["done"],
     )
     return jsonify({"task": new_task}), 201
 
@@ -110,6 +109,7 @@ def update_task():
 
     request_json = request.get_json(force=True)
     parse_errors = iterate_properties_updatetask(request_json)
+    task_to_update = {}
 
     if len(parse_errors) > 0:
         raise JSONValidationError(parse_errors)
