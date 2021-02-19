@@ -1,8 +1,0 @@
-summary: "Check Tasks"
-security:
-- api_key:
-responses:
-  200:
-    description: "Here are your tasks"   
-  400:
-    description: "Something went wrong"
