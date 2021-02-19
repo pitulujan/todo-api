@@ -21,7 +21,9 @@ In order to run the application, first you should create a private-public key pa
 │   │   ├── routes.py
 │   │   └── errors             
 │   │        ├── __init__.py 
-│   │        └──  api_errors.
+│   │        └──  api_errors.py
+│   ├── config
+│   │    └── config.py
 │   ├── enviroment
 │   │    ├── req_deploy.txt
 │   │    └── req_dev.txt
