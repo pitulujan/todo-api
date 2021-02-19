@@ -1,20 +1,21 @@
 #!venv/bin/python
-from flask import Flask, jsonify, abort, make_response, g, request
-from typing import Any
-import jwt
 from time import time
-from api import app, auth, private_key, public_key, conn
+from typing import Any
+
+import jwt
+from api import app, auth, conn, private_key, public_key
 from api.errors.api_errors import (
-    NotAuthorized,
-    JSONValidationError,
     IdNotFoundException,
+    JSONValidationError,
+    NotAuthorized,
 )
 from api.json_validators import (
-    iterate_properties_updatetask,
-    iterate_properties_newtask,
     iterate_properties_deletetask,
+    iterate_properties_newtask,
+    iterate_properties_updatetask,
 )
 from flasgger.utils import swag_from
+from flask import Flask, abort, g, jsonify, make_response, request
 
 
 @auth.verify_password
@@ -23,7 +24,7 @@ def verify_password(username_or_token, password):
     auth_header = request.headers.get("Authorization", None)
 
     if auth_header is None:
-        abort(401)
+        raise NotAuthorized("Missing Token or username/password")
     token = None
 
     try:
@@ -34,7 +35,7 @@ def verify_password(username_or_token, password):
 
         user = conn.find_user(username_or_token)
         if user is None or not user.check_password(password):
-            return False
+            raise NotAuthorized("Wrong username or password")
         g.user = user
         return True
 

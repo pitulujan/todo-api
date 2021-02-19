@@ -1,8 +1,8 @@
-from repos import Repository
-from repos.mongo import MongoRepository
+from api.errors.api_errors import InvalidId
 from api.schemas import TaskSchema, UserSchema
 from bson.objectid import ObjectId
-from api.errors.api_errors import InvalidId
+from repos import Repository
+from repos.mongo import MongoRepository
 
 
 class Service:
@@ -12,8 +12,8 @@ class Service:
     def find_user(self, username=None, _id=None):
         if username is not None:
             user = self.repo_client.find_one({"username": username}, "users")
-            user["_id"] = str(user["_id"])
             if user is not None:
+                user["_id"] = str(user["_id"])
                 user = UserSchema().load(user)
         else:
             user = self.repo_client.find_one({"_id": ObjectId(_id)}, "users")
