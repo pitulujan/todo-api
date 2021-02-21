@@ -37,9 +37,12 @@ In order to run the application, first you should create a private-public key pa
 │   ├── repos
 │   │    ├── __init__.py
 │   │    └── mongo.py
+│   ├── tests
+│   │    └── __init__.py
 │   ├── jwt-key              # User should create it and paste it here 
 |   ├── jwt-key.pub          # User should create it and paste it here
 |   ├── .env                 # MONGO_URL = 'mongodb+srv://``user``:```pass```@cluster0.jqc5t.mongodb.net/``cluster``?retryWrites=true&w=majority'
-|   └── run.py
+|   ├── run.py
+|   └── setup.cfg            # Configuration file for pre-commit hooks
 ```
 Then simply create a virtual environment, install req_deploy.txt, run.py and navigate to http://localhost:5000/apidocs/#/!
