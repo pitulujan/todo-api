@@ -19,6 +19,8 @@ In order to run the application, first you should create a private-public key pa
 │   │   ├── json_validators.py
 │   │   ├── models.py
 │   │   ├── routes.py
+│   │   ├── schemas.py
+│   │   ├── services.py
 │   │   ├── errors          # Errors blueprint
 │   │   |    ├── __init__.py 
 │   │   |    └──  api_errors.py
