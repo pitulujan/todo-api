@@ -5,7 +5,7 @@ Simple Flask API for playing around with tasks implementing JWT for authenticati
 I decided to use JSON Web Tokens with Public Key Signatures, so if in the future we are gonna use microservices,and in order to avoid bottlenecks when verifying tokens, we can separate both the token generation from the token verification, giving us the ability to decode JWT in any service with access to the public key.
 
 #### New on this branch
-In this branch i added a MongoDb implementation. In order to connect and to execute queries against the database, you are going to use a library created and maintained by MongoDB itself called pymongo. Since you might want to use another database in the future, it is a good idea to decouple your application from MongoDB. For the sake of simplicity we are going to create an abstract class to represent a Repository, this class should be the one used throughout your application.
+In this branch i added a MongoDb implementation. In order to connect and to execute queries against the database, i'm going to use a library created and maintained by MongoDB itself called pymongo. Since i might want to use another database in the future, it is a good idea to decouple the application from MongoDB. For the sake of simplicity i'm going to create an abstract class to represent a Repository, this class is the one used throughout the application.
 
 ### Run it 
 
